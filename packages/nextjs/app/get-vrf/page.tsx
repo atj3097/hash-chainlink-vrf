@@ -8,7 +8,7 @@ import { ambAbi,
 import { yahoAddress, 
         yaruAddress, 
         vrfConsumerAddress, 
-        ambMessageAdapter,
+        ambMessageRelayer,
         ambAdapter } from "./contract-deployments";
 import { goerliProvider, 
         gnosisProvider, 

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { ethers, AbiCoder, getAddress } from "ethers";
-import { ambAbi, ambHelperAbi, vrfConsumerAbi, yahoAbi, yaruAbi } from "./abi-imports";
+import { ambMessageRelayerAbi, ambAdapterAbi, vrfConsumerAbi, yahoAbi, yaruAbi } from "./abi-imports";
 import {
   yahoAddress,
   yaruAddress,
   vrfConsumerAddress,
+  ambMessageRelayer,
+  ambAdapter,
 } from "./contract-deployments";
 import { goerliProvider, gnosisProvider, devWallet } from "./provider-setup";
 
@@ -18,8 +20,8 @@ export const getVRF = async () => {
       const yahoContract = new ethers.Contract(yahoAddress, yahoAbi.abi, signer);
       const yaruContract = new ethers.Contract(yaruAddress, yaruAbi.abi, signer);
       const vrfConsumerContract = new ethers.Contract(vrfConsumerAddress, vrfConsumerAbi.abi, goerliProvider);
-      const ambHelperContract = new ethers.Contract(ambHelperAddress, ambHelperAbi, goerliProvider);
-      const ambContractOnGoerli = new ethers.Contract(goerliAmbAddress, ambAbi, goerliProvider);
+      const ambMessageRelayerContract = new ethers.Contract(ambMessageRelayer, ambMessageRelayerAbi, gnosisProvider);
+      const ambContractOnGoerli = new ethers.Contract(ambAdapter, ambAdapterAbi, goerliProvider);
 
       const message = {
         toChainId: ethers.toBigInt(5),
@@ -29,10 +31,11 @@ export const getVRF = async () => {
 
       // Step 1: Dispatch the message
       console.log("Dispatching message...");
+      //Question: Is the AMB message relay supposed to be the same as the adapter in the Yaho contract?
       const dispatchTx = await yahoContract.dispatchMessagesToAdapters(
         [message],
-        [chiadoAmbAdapterAddress],
-        [goerliAmbAddress],
+        [ambMessageRelayerContract.address],
+        [ambContractOnGoerli.address],
       );
       await dispatchTx.wait();
       console.log("Message dispatched.", dispatchTx);
@@ -42,7 +45,7 @@ export const getVRF = async () => {
       const coder = AbiCoder.defaultAbiCoder();
       const encodedData = coder.encode(["address", "bytes"], [vrfConsumerAddress, message.data]);
       console.log("Encoded data:", encodedData);
-      const signature = await ambHelperContract.getSignature(encodedData);
+      const signature = await ambMessageRelayer.getSignature(encodedData);
       console.log("Signature obtained.", signature);
 
       // Step 3: Execute the signature
@@ -63,7 +66,7 @@ export const getVRF = async () => {
         [message],
         [messageId],
         [signer.address],
-        [goerliAmbAddress],
+        [ambContractOnGoerli.address],
       );
       await executeTx.wait();
       console.log("Message executed.");
