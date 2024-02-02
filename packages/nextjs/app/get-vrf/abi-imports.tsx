@@ -1,7 +1,8 @@
 import yahoAbi from "./abi/Yaho.json";
 import yaruAbi from "./abi/Yaru.json";
 import vrfConsumerAbi from "./abi/VrfConsumerAddress.json";
-import ambMessageRelayer from "./abi/AmbMessageRelayer.json";
-import ambAdapter from "./abi/AmbAdapter.json";
+import ambMessageRelayerAbi from "./abi/AmbMessageRelayer.json";
+import ambAdapterAbi from "./abi/AmbAdapter.json";
+import ambHelperAbi from "./abi/AmbHelper.json";
 
-export { ambMessageRelayerAbi, ambAdapterAbi, vrfConsumerAbi, yahoAbi, yaruAbi };
+export { ambMessageRelayerAbi, ambAdapterAbi, vrfConsumerAbi, yahoAbi, yaruAbi, ambHelperAbi };

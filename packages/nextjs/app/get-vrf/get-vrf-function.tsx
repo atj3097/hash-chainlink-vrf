@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
 import { ethers, AbiCoder, getAddress } from "ethers";
-import { ambMessageRelayerAbi, ambAdapterAbi, vrfConsumerAbi, yahoAbi, yaruAbi } from "./abi-imports";
+import { ambMessageRelayerAbi, ambAdapterAbi, vrfConsumerAbi, yahoAbi, yaruAbi, ambHelperAbi } from "./abi-imports";
 import {
   yahoAddress,
   yaruAddress,
   vrfConsumerAddress,
   ambMessageRelayer,
   ambAdapter,
+  ambHelper
 } from "./contract-deployments";
 import { goerliProvider, gnosisProvider, devWallet } from "./provider-setup";
 
-export const getVRF = async () => {
+export const getVRF =async (
+  listenForVRFResponse: (requestId: string) => void,
+  setRequestId: (requestId: string) => void,
+  setLoading: (loading: boolean) => void
+) =>  {
     console.log("Starting the process to get VRF...");
+
+    setLoading(true);
 
 
     try {
@@ -20,8 +26,10 @@ export const getVRF = async () => {
       const yahoContract = new ethers.Contract(yahoAddress, yahoAbi.abi, signer);
       const yaruContract = new ethers.Contract(yaruAddress, yaruAbi.abi, signer);
       const vrfConsumerContract = new ethers.Contract(vrfConsumerAddress, vrfConsumerAbi.abi, goerliProvider);
-      const ambMessageRelayerContract = new ethers.Contract(ambMessageRelayer, ambMessageRelayerAbi, gnosisProvider);
-      const ambContractOnGoerli = new ethers.Contract(ambAdapter, ambAdapterAbi, goerliProvider);
+      const ambMessageRelayerContract = new ethers.Contract(ambMessageRelayer, ambMessageRelayerAbi.abi, gnosisProvider);
+      const ambContractOnGoerli = new ethers.Contract(ambAdapter, ambAdapterAbi.abi, goerliProvider);
+      const ambHelperContract = new ethers.Contract(ambHelper, ambHelperAbi.abi, gnosisProvider);
+
 
       const message = {
         toChainId: ethers.toBigInt(5),
@@ -45,7 +53,7 @@ export const getVRF = async () => {
       const coder = AbiCoder.defaultAbiCoder();
       const encodedData = coder.encode(["address", "bytes"], [vrfConsumerAddress, message.data]);
       console.log("Encoded data:", encodedData);
-      const signature = await ambMessageRelayer.getSignature(encodedData);
+      const signature = await ambHelperContract.getSignatures(ambContractOnGoerli.address, encodedData);
       console.log("Signature obtained.", signature);
 
       // Step 3: Execute the signature

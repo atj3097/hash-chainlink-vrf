@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "~~/components/Header";
-import { AbiCoder, ethers, getAddress } from "ethers";
-import { ambAbi, 
-        ambHelperAbi, 
-        vrfConsumerAbi, 
-        yahoAbi, yaruAbi } from "./abi-imports";
-import { yahoAddress, 
-        yaruAddress, 
-        vrfConsumerAddress, 
-        ambMessageRelayer,
-        ambAdapter } from "./contract-deployments";
-import { goerliProvider, 
-        gnosisProvider, 
-        devWallet } from "./provider-setup";
+import { ethers } from "ethers";
+import {  vrfConsumerAbi } from "./abi-imports";
+import {  vrfConsumerAddress } from "./contract-deployments";
+import { goerliProvider  } from "./provider-setup";
 import { getVRF } from "./get-vrf-function";
 
 const GetVRF = () => {
@@ -53,7 +43,10 @@ const GetVRF = () => {
         <p className="text-3xl mt-7">Tap for a VRF</p>
         <button
           className={`btn btn-secondary btn-lg font-thin ${loading ? "loading" : ""} bg-base-100`}
-          onClick={getVRF}
+          onClick={(e) => {
+            e.preventDefault(); // Prevents the default action of the event.
+            getVRF(listenForVRFResponse, setRequestId, setLoading);
+          }}
           disabled={loading}
         >
           {loading ? "Requesting..." : "Get VRF"}
