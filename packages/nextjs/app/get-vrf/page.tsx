@@ -15,7 +15,6 @@ const GetVRF = () => {
   const listenForVRFResponse = async (requestId: string) => {
     console.log("Listening for VRF response with requestId:", requestId);
 
-    // Create a filter for the 'RequestFulfilled' event that matches the provided requestId
     const filter = vrfConsumerContract.filters.RequestFulfilled(requestId);
 
     vrfConsumerContract.on(filter, (requestId: string, randomWords: [string], payment: string) => {
@@ -44,7 +43,7 @@ const GetVRF = () => {
         <button
           className={`btn btn-secondary btn-lg font-thin ${loading ? "loading" : ""} bg-base-100`}
           onClick={(e) => {
-            e.preventDefault(); // Prevents the default action of the event.
+            e.preventDefault(); 
             getVRF(listenForVRFResponse, setRequestId, setLoading);
           }}
           disabled={loading}
