@@ -8,7 +8,7 @@ import {
   ambAdapter,
   ambHelper
 } from "./contract-deployments";
-import { goerliProvider, gnosisProvider, devWallet } from "./provider-setup";
+import { goerliProvider, gnosisProvider, devWallet } from "../provider-setup";
 
 export const getVRF =async (
   listenForVRFResponse: (requestId: string) => void,
