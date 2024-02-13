@@ -1,8 +1,10 @@
+"use server"
 import React from "react";
 import VRFRequester from "./components/vrfrequester";
 
 const GetVRF = () => {
   const listenForVRFResponse = (requestId: string) => {
+    "use server"
     console.log("Listening for VRF response with requestId:", requestId);
   };
 
