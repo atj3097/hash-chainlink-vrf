@@ -11,7 +11,6 @@ import {
 import { goerliProvider, gnosisProvider, devWallet } from "../provider-setup";
 
 export const getVRF =async (
-  listenForVRFResponse: (requestId: string) => void,
   setRequestId: (requestId: string) => void,
   setLoading: (loading: boolean) => void
 ) =>  {
@@ -81,7 +80,7 @@ export const getVRF =async (
 
       // Step 6: Listen for the VRF response
       console.log("Listening for VRF response...");
-      listenForVRFResponse(messageId);
+      console.log('Message ID:', messageId);
       console.log("Listening for VRF response started.");
 
       setRequestId(messageId);

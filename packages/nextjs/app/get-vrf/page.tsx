@@ -3,10 +3,6 @@ import React from "react";
 import VRFRequester from "./components/vrfrequester";
 
 const GetVRF = () => {
-  const listenForVRFResponse = (requestId: string) => {
-    "use server"
-    console.log("Listening for VRF response with requestId:", requestId);
-  };
 
   return (
     <>
@@ -14,7 +10,7 @@ const GetVRF = () => {
         <p className="text-3xl mt-14">Use Hashi to request a Chainlink VRF from Goerli on Chiado</p>
         <p className="text-3m mt-2">Open the Chrome console to see the magic!</p>
         <p className="text-3xl mt-7">Tap for a VRF</p>
-        <VRFRequester listenForVRFResponse={listenForVRFResponse} />
+        <VRFRequester />
       </div>
     </>
   );

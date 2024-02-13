@@ -2,18 +2,14 @@
 import React, { useState } from "react";
 import { getVRF } from "./get-vrf-function";
 
-interface VRFRequesterProps {
-  listenForVRFResponse: (requestId: string) => void;
-}
-
-const VRFRequester: React.FC<VRFRequesterProps> = ({ listenForVRFResponse }) => {
+const VRFRequester = () => {
   const [requestId, setRequestId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleGetVRFClick = async () => {
     setLoading(true);
     try {
-      await getVRF(listenForVRFResponse, setRequestId, setLoading);
+      await getVRF(setRequestId, setLoading);
     } catch (error) {
       console.error("Failed to get VRF:", error);
       setLoading(false);
